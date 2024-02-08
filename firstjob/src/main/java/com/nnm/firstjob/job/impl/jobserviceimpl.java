@@ -1,52 +1,72 @@
 package com.nnm.firstjob.job.impl;
 
 import com.nnm.firstjob.job.job;
+import com.nnm.firstjob.job.jobrepo;
 import com.nnm.firstjob.job.jobservice;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class jobserviceimpl implements jobservice {
-    public List<job> jobs=new ArrayList<>();
 
-    private Long nextid=1L;
+    //public List<job> jobs=new ArrayList<>();
+
+    jobrepo jobrepo;
+
+    public jobserviceimpl(com.nnm.firstjob.job.jobrepo jobrepo) {
+        this.jobrepo = jobrepo;
+    }
+
+    //private Long nextid=1L;
     @Override
     public List<job> findall() {
 
-        return jobs;
+        return jobrepo.findAll();
     }
 
     @Override
     public void createjob(job job) {
-        job.setId(nextid++);
-        jobs.add(job);
+       // job.setId(nextid++);
+        //jobs.add(job);
+        jobrepo.save(job);
     }
 
     @Override
     public job getjobbyid(Long id) {
-        for (job job : jobs) {
+        /*for (job job : jobs) {
             if (job.getId() == id) {
                 return job;
             }
         }
-        return null;
+        return null;*/
+        return jobrepo.findById(id).orElse(null);
+
     }
 
     @Override
     public boolean deletejobbyid(Long id) {
-        for (job job : jobs) {
+        /*for (job job : jobs) {
             if (job.getId() == id) {
                 jobs.remove(job);
                 return true;
             }
         }
-        return false;
+        return false;*/
+        try {
+            jobrepo.deleteById(id);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
     }
 
     @Override
     public boolean updatejob(Long id, job updatejob) {
-        for (job job : jobs) {
-            if (job.getId() == id) {
+        Optional<job>jobOptional=jobrepo.findById(id);
+            if (jobOptional.isPresent()) {
+                job job =jobOptional.get();
                 if (updatejob.getTitle() != null) {
                     job.setTitle(updatejob.getTitle());
                 }
@@ -62,9 +82,9 @@ public class jobserviceimpl implements jobservice {
                 if (updatejob.getMaxsalary() != null) {
                     job.setMaxsalary(updatejob.getMaxsalary());
                 }
+                jobrepo.save(job);
                 return true;
             }
-        }
         return false;
     }
 

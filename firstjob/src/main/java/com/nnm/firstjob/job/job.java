@@ -1,12 +1,24 @@
 package com.nnm.firstjob.job;
 
+import com.nnm.firstjob.company.company;
+import jakarta.persistence.*;
+
+@Entity
+
 public class job {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String discraption;
     private String minsalary;
     private String maxsalary;
     private String location;
+    @ManyToOne
+    private company company;
+
+    public job() {
+    }
 
     public job(long id, String title, String discraption, String minsalary, String maxsalary, String location) {
         this.id = id;
