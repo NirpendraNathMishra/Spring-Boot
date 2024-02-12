@@ -1,7 +1,7 @@
 package com.nnm.firstjob.company;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/companies")
 public class companycontroller {
-    private companyservice companyservice;
+    private final companyservice companyservice;
 
     public companycontroller(companyservice companyservice) {
         this.companyservice = companyservice;
@@ -30,5 +30,23 @@ public class companycontroller {
     public ResponseEntity<String>addcompany(@RequestBody company company){
         companyservice.craetecompany(company);
         return new ResponseEntity<>("Company Added sucessfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String>detete(@PathVariable Long id){
+        boolean deteted=companyservice.deletecompany(id);
+        if (deteted==true) {
+            return ResponseEntity.ok("Company Is Deleted with id " + id);
+        }else {
+            return new ResponseEntity<>("Job Not Found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<company>findcompanybyid(@PathVariable Long id){
+        company company=companyservice.findcompanybyid(id);
+        if (company!=null)
+            return new ResponseEntity<>(company,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -1,5 +1,6 @@
 package com.nnm.firstjob.job;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class jobcontroller {
     @PostMapping
     public ResponseEntity<String> CreateJS(@RequestBody job job){
         jobservice.createjob(job);
+        //company c=job.getCompany();
         return new ResponseEntity<>("job added successfully",HttpStatus.OK);
     }
 

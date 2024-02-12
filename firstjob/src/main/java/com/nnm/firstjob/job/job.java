@@ -28,6 +28,13 @@ public class job {
         this.maxsalary = maxsalary;
         this.location = location;
     }
+    public com.nnm.firstjob.company.company getCompany() {
+        return company;
+    }
+
+    public void setCompany(com.nnm.firstjob.company.company company) {
+        this.company = company;
+    }
 
     public long getId() {
         return id;
