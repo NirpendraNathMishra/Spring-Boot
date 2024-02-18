@@ -57,10 +57,12 @@ public class reviewserviceimpl implements ReviewService{
 
     @Override
     public boolean deletereview(Long companyid, Long reviewId) {
-        if (companyservice.findcompanybyid(companyid)!=null& reviewRepo.existsById(reviewId)){
+        if (companyservice.findcompanybyid(companyid)!=null&& reviewRepo.existsById(reviewId)){
             Review review= reviewRepo.findById(reviewId).orElse(null);
+            assert review != null;
             company company= review.getCompany();
             company.getReviews().remove(review);
+            review.setCompany(null);
             companyservice.updatecompany(company,companyid);
             reviewRepo.deleteById(reviewId);
             return true;
