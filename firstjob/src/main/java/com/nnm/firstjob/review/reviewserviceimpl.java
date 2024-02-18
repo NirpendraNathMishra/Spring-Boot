@@ -42,4 +42,30 @@ public class reviewserviceimpl implements ReviewService{
         List<Review>reviews= reviewRepo.findByCompanyId(companyid);
         return reviews.stream().filter(review -> review.getId().equals(reviewid)).findFirst().orElse(null);
     }
+
+    @Override
+    public boolean updatereview(Long companyid, Long reviewid, Review updatedreview) {
+        if (companyservice.findcompanybyid(companyid)!=null){
+            updatedreview.setCompany(companyservice.findcompanybyid(companyid));
+            updatedreview.setId(reviewid);
+            reviewRepo.save(updatedreview);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deletereview(Long companyid, Long reviewId) {
+        if (companyservice.findcompanybyid(companyid)!=null& reviewRepo.existsById(reviewId)){
+            Review review= reviewRepo.findById(reviewId).orElse(null);
+            company company= review.getCompany();
+            company.getReviews().remove(review);
+            companyservice.updatecompany(company,companyid);
+            reviewRepo.deleteById(reviewId);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
